@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from . import config as cfg
 import tkinter as tk
 import tkinter.ttk as ttk

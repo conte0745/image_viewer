@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from . import TopRowFrame
 from . import FileFrame
 from . import ImageViewFrame

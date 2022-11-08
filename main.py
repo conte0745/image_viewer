@@ -7,10 +7,14 @@ from Frame.ImageViewFrame import ImageViewFrame
 from Frame.SearchFileFrame import SearchFileFrame
 import Frame.config as cfg
 
-if __name__ == '__main__':
+root : tk.Tk
+
+def main():
+    global root
     root = tk.Tk()
-    root.geometry(f'{cfg.SIZE[0]}x{cfg.SIZE[1]}')
+
     root.title('Multi Simple Viewer')
+    root.geometry(f'{cfg.size[0]}x{cfg.size[1]}')
     root.minsize(width=650, height=650)
 
     # search_file_frame = SearchFileFrame(master=root)
@@ -18,19 +22,38 @@ if __name__ == '__main__':
 
     PATH = '/Users/takeuchiryouya/Code/image_viewer/canon.png'
 
-    file_frame = ttk.Frame(master=root)
-    top_row_frame = TopRowFrame(master=file_frame, num=cfg.cnt_photo)
-    file_frame1 = FileFrame(master=file_frame, row=1)
-    file_frame2 = FileFrame(master=file_frame, row=2)
-    file_frame3 = FileFrame(master=file_frame, row=3)
-    file_frame4 = FileFrame(master=file_frame, row=4)
-    file_frame.pack(fill='x')
+    file_frames = ttk.Frame(master=root)
+    image_frames = ttk.Frame(master=root)
+    
+    top_row_frame = TopRowFrame(master=file_frames, num=cfg.cnt_photo)
 
-    images_frame = ttk.Frame(master=root)
-    image_view_frame = ImageViewFrame(master=images_frame, path=PATH, num=1)
-    image_view_frame2 = ImageViewFrame(master=images_frame, path=PATH, num=2)
+    file_frame = [FileFrame] * 6
+    image_frame = [ImageViewFrame] * 6
 
-    image_view_frame3 = ImageViewFrame(master=images_frame, path=PATH, num=3)
-    image_view_frame4 = ImageViewFrame(master=images_frame, path=PATH, num=4)
-    images_frame.pack(fill=tk.X, expand=True)
+    for i in range(cfg.cnt_photo):
+        file_frame[i] = FileFrame(master=file_frames, row=i+1)
+        image_frame[i] = ImageViewFrame(master=image_frames, path=PATH, photo_idx=i+1)
+
+    file_frames.pack(fill='x')
+    image_frames.pack(fill=tk.X, expand=True)
+
+    root.bind('<KeyPress>', esc_pressed)
+    root.bind('<Configure>', update_main_frame_size)
+
     root.mainloop()
+
+    # Rfs5rkogtji54fiFRfGFAae
+
+def esc_pressed(e : tk.Event):
+    global root
+    print(e.keysym)
+    if e.keysym == 'Escape':
+        root.destroy()
+
+def update_main_frame_size(e : tk.Event):
+    global root
+    size_ = root.geometry().split('+')[0] # get(100x100+200x200)
+    cfg.size = [int(size_.split('x')[0]), int(size_.split('x')[1])]
+
+if __name__ == '__main__':
+    main()

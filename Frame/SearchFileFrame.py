@@ -7,11 +7,13 @@ from . import config as cfg
 class SearchFileFrame(ttk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
+        PATH = '/Users/takeuchiryouya/Code/image_viewer/canon.png'
         self.master = master
         self._num_entry = 0
         self.max_list_height = 10
         self.__max_entry = 4
-        self._current_path = os.getcwd()
+        #self._current_path = os.getcwd()
+        self._current_path = PATH
         self.set_label()
         
 

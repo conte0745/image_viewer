@@ -8,12 +8,14 @@ from . import config as cfg
 class FileFrame(ttk.Frame):
     def __init__(self, master=None, row=1):
         super().__init__(master)
+        PATH = '/Users/takeuchiryouya/Code/image_viewer/canon.png'
         self.master = master
         self.row = row
         self.max_list_height = 10
-        self.current_path = os.path.dirname(__file__)
+        # self.current_path = os.path.dirname(__file__)
+        self.current_path = PATH
         self.init()
-        self.update_listbox(self.current_path)
+        #self.update_listbox(self.current_path)
 
     def init(self):
         vcmd = self.register(self.update_label)
@@ -71,24 +73,24 @@ class FileFrame(ttk.Frame):
             height=min(self.max_list_height, len(list_dir)),
             listvariable=strvar_list_dir,
             )
-        self.listbox.bind('<<ListboxSelect>>', self.selected_listbox)
+        self.listbox.bind('<<ListboxSelect>>', selected_listbox)
         self.listbox.pack()
         print(self.listbox)
     
-    def selected_listbox(self, event):
-        selected_index = self.listbox.curselection()
-        selected_path = self.listbox.get(selected_index)
+        def selected_listbox(event):
+            selected_index = self.listbox.curselection()
+            selected_path = self.listbox.get(selected_index)
 
-        if selected_path == '..':
-            self.current_path = '/'.join(self.current_path.split('/')[:-1])
-        else:
-            self.current_path = os.path.join(self.current_path, selected_path)
+            if selected_path == '..':
+                self.current_path = '/'.join(self.current_path.split('/')[:-1])
+            else:
+                self.current_path = os.path.join(self.current_path, selected_path)
 
-        self.listbox.destroy()
-        if not os.path.isfile(self.current_path):
-            self.update_listbox(self.current_path)
-        elif os.path.isfile(self.current_path):
-            pass
+            self.listbox.destroy()
+            if not os.path.isfile(self.current_path):
+                self.update_listbox(self.current_path)
+            elif os.path.isfile(self.current_path):
+                pass
     
     @property
     def current_path(self):

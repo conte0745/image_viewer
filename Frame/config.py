@@ -4,6 +4,7 @@ from PIL import Image
 '''
 Define global variable
 '''
+
 root : tk.Tk
 size  = [650, 1000]
 photo_canvases = [tk.Canvas] * 6

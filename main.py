@@ -25,12 +25,12 @@ def main():
     file_frames = ttk.Frame(master=root)
     image_frames = ttk.Frame(master=root)
     
-    top_row_frame = TopRowFrame(master=file_frames, num=cfg.cnt_photo)
+    top_row_frame = TopRowFrame(master=file_frames, num=cfg.cnt_photos)
 
     file_frame = [FileFrame] * 6
     image_frame = [ImageViewFrame] * 6
 
-    for i in range(cfg.cnt_photo):
+    for i in range(cfg.cnt_photos):
         file_frame[i] = FileFrame(master=file_frames, row=i+1)
         image_frame[i] = ImageViewFrame(master=image_frames, path=PATH, photo_idx=i+1)
 

@@ -7,23 +7,21 @@ from Frame.ImageViewFrame import ImageViewFrame
 from Frame.SearchFileFrame import SearchFileFrame
 import Frame.config as cfg
 
-root : tk.Tk
-
 def main():
-    global root
-    root = tk.Tk()
 
-    root.title('Multi Simple Viewer')
-    root.geometry(f'{cfg.size[0]}x{cfg.size[1]}')
-    root.minsize(width=650, height=650)
+    cfg.root = tk.Tk()
+
+    cfg.root.title('Multi Simple Viewer')
+    cfg.root.geometry(f'{cfg.size[0]}x{cfg.size[1]}')
+    cfg.root.minsize(width=650, height=650)
 
     # search_file_frame = SearchFileFrame(master=root)
     # search_file_frame.pack()
 
     PATH = '/Users/takeuchiryouya/Code/image_viewer/canon.png'
 
-    file_frames = ttk.Frame(master=root)
-    image_frames = ttk.Frame(master=root)
+    file_frames = ttk.Frame(master=cfg.root)
+    image_frames = ttk.Frame(master=cfg.root)
     
     top_row_frame = TopRowFrame(master=file_frames, num=cfg.cnt_photos)
 
@@ -37,23 +35,15 @@ def main():
     file_frames.pack(fill='x')
     image_frames.pack(fill=tk.X, expand=True)
 
-    root.bind('<KeyPress>', esc_pressed)
-    root.bind('<Configure>', update_main_frame_size)
+    cfg.root.bind('<KeyPress>', esc_pressed)
 
-    root.mainloop()
+    cfg.root.mainloop()
 
     # Rfs5rkogtji54fiFRfGFAae
 
 def esc_pressed(e : tk.Event):
-    global root
-    print(e.keysym)
     if e.keysym == 'Escape':
-        root.destroy()
-
-def update_main_frame_size(e : tk.Event):
-    global root
-    size_ = root.geometry().split('+')[0] # get(100x100+200x200)
-    cfg.size = [int(size_.split('x')[0]), int(size_.split('x')[1])]
+        cfg.root.destroy()
 
 if __name__ == '__main__':
     main()

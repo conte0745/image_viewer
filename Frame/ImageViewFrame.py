@@ -151,6 +151,9 @@ class ImageViewFrame(ttk.Frame):
             elif 3 <= idx < 5:
                 cfg.photo_canvases[idx-1].grid(row=1, column=idx-3, sticky=tk.W + tk.E + tk.N + tk.S)
 
+    def update_iamge(self):
+        self.init()
+
     @property
     def image_path(self):
         return self._image_path

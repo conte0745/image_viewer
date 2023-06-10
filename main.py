@@ -1,16 +1,19 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import logging as lg
+import faulthandler
+faulthandler.enable()
 
 from Frame.TopRowFrame import TopRowFrame
 from Frame.FileFrame import FileFrame
 from Frame.ImageViewFrame import ImageViewFrame
-# from Frame.SearchFileFrame import SearchFileFrame
 import Frame.config as cfg
+
 
 def main():
     # lg.basicConfig(filename="log/viewer.log", encoding="utf-8", level=lg.DEBUG)
     lg.basicConfig(level=lg.INFO)
+    lg.info("start")
 
     cfg.root = tk.Tk()
 

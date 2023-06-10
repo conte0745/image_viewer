@@ -2,7 +2,10 @@ import os
 import tkinter as tk
 import tkinter.ttk as ttk
 import logging as lg
+import faulthandler
+faulthandler.enable()
 
+from copy import deepcopy
 from PIL import Image, ImageTk
 
 from . import config as cfg
@@ -50,13 +53,12 @@ class ImageViewFrame(ttk.Frame):
             return self.MIN_ZOOM
         elif temp >= self.MAX_ZOOM:
             return self.MAX_ZOOM
-        else:
-            return temp
+        return temp
 
     def click_img(self, e : tk.Event):
         self.old_x = e.x
         self.old_y = e.y
-        lg.debug(f'click {e.widget}')
+        lg.info(f'click {e.widget}')
             
     def drag_img(self, e : tk.Event):
         new_x = e.x
@@ -84,15 +86,18 @@ class ImageViewFrame(ttk.Frame):
             self.draw(idx+1)
             self.set_bind(idx+1)
         
-        lg.info("Wheel")
-        
+
     def resize_all_frame(self, e:tk.Event):
 
-        old_size = cfg.size
-        size_ = cfg.root.geometry().split('+')[0] # get_format(100x100+200x200)
-        cfg.size = [int(size_.split('x')[0]), int(size_.split('x')[1])]
+        old_size = deepcopy(cfg.size)
+        size_ = cfg.root.geometry().split('+') # get_format(100x100+200+200)
+        cfg.size = [int(size_[0].split('x')[0]), int(size_[0].split('x')[1])]
         
+        lg.info(" old : %s, new : %s", "x".join([str(i) for i in old_size]), "x".join([str(i) for i in cfg.size]))
+        
+
         if old_size != cfg.size:
+            lg.info("change")
             self.resize_canvas()
             for idx in range(cfg.cnt_photos):
                 self.draw(idx+1)

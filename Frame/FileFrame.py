@@ -113,8 +113,7 @@ class FileFrame(ttk.Frame):
             takefocus=True
             )
         self.listbox.bind('<<ListboxSelect>>', self.selected_listbox)
-        self.listbox.bind("<Enter>", self.change_color_listbox)
-        self.listbox.bind("<Leave>", self.change_color_listbox)
+        self.listbox.bind("<Motion>", self.change_color_listbox)
 
         self.listbox.pack(fill=tk.X)
         self.scroll.command = self.listbox.yview

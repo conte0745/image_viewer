@@ -1,6 +1,8 @@
 import os
 import tkinter as tk
 import tkinter.ttk as ttk
+import logging as lg
+
 from PIL import Image, ImageTk
 
 from . import config as cfg
@@ -13,13 +15,16 @@ class ImageViewFrame(ttk.Frame):
         self._image_path = path
         self.old_x = None
         self.old_y = None
+        self.MAX_ZOOM = 3.0
+        self.MIN_ZOOM = 0.01
         self.init()
 
     def init(self):
         self.pil_img : Image
+        is_exists_image = os.path.exists(self.image_path)
+        is_valid_ex = self.image_path.lower().endswith(tuple(cfg.VALID_EX))
     
-        if os.path.exists(self.image_path) \
-            and self.image_path.lower().endswith(('.png', '.jpg', '.dng')):
+        if is_exists_image and is_valid_ex:
 
             self.init_pil_img = Image.open(self.image_path)
             self.init_h = self.init_pil_img.height
@@ -41,17 +46,17 @@ class ImageViewFrame(ttk.Frame):
 
     def calc_size_percent(self, size_percent, delta):
         temp = size_percent + float(delta) / 100
-        if temp < 0.01:
-            return 0.01
-        elif temp >= 3.0:
-            return 3.0
+        if temp < self.MIN_ZOOM:
+            return self.MIN_ZOOM
+        elif temp >= self.MAX_ZOOM:
+            return self.MAX_ZOOM
         else:
             return temp
 
     def click_img(self, e : tk.Event):
         self.old_x = e.x
         self.old_y = e.y
-        print(f'click {e.widget}')
+        lg.debug(f'click {e.widget}')
             
     def drag_img(self, e : tk.Event):
         new_x = e.x
@@ -70,23 +75,34 @@ class ImageViewFrame(ttk.Frame):
             new_y - self.old_y
         )
 
-    def mouse_wheel(self, e : tk.Event):
+    def scale_img(self, e : tk.Event):
         delta = e.delta
         cfg.size_percent = self.calc_size_percent(cfg.size_percent, delta)
-        print(f'{cfg.size_percent} %')
+        cfg.percent_label_strvar.set(str(int(cfg.size_percent*100)))
 
         for idx in range(cfg.cnt_photos):
             self.draw(idx+1)
             self.set_bind(idx+1)
         
-    def resize_all_frame(self, _):
+        lg.info("Wheel")
+        
+    def resize_all_frame(self, e:tk.Event):
+
+        old_size = cfg.size
         size_ = cfg.root.geometry().split('+')[0] # get_format(100x100+200x200)
         cfg.size = [int(size_.split('x')[0]), int(size_.split('x')[1])]
+        
+        if old_size != cfg.size:
+            self.resize_canvas()
+            for idx in range(cfg.cnt_photos):
+                self.draw(idx+1)
+                self.set_bind(idx+1)
 
     def resize_canvas(self):
     
         # min_size = min(cfg.size[0], cfg.size[1])
         cfg.size_percent = int(cfg.size[0] / self.init_pil_img.width * 100) / 100
+        cfg.percent_label_strvar.set(str(int(cfg.size_percent*100)))
         if cfg.cnt_photos % 2 == 0:
             cfg.size_percent /= 2
         elif cfg.cnt_photos % 3 == 0:
@@ -95,13 +111,11 @@ class ImageViewFrame(ttk.Frame):
         self.canvas_h = cfg.size_percent * self.init_h
         self.canvas_w = cfg.size_percent * self.init_w
 
-        print(self.canvas_h, self.canvas_w)
-
     def set_bind(self, idx):
         temp_widget : tk.Widget = self.master.nametowidget(f'img_canvas_row{idx}')
         temp_widget.bind('<ButtonPress>', self.click_img)
         temp_widget.bind('<Button1-Motion>', self.drag_img)
-        temp_widget.bind('<MouseWheel>', self.mouse_wheel)
+        temp_widget.bind('<MouseWheel>', self.scale_img)
         cfg.root.bind('<Configure>', self.resize_all_frame)
 
     def draw(self, idx):
@@ -116,7 +130,6 @@ class ImageViewFrame(ttk.Frame):
             name=f'img_canvas_row{idx}',
         )
         cfg.photo_imgs[idx-1] = ImageTk.PhotoImage(image=self.pil_img)
-        cfg.percent_label_strvar.set(str(int(cfg.size_percent*100)))
 
         cfg.photo_ids[idx-1] = cfg.photo_canvases[idx-1].create_image(
             self.canvas_w // 2,

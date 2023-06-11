@@ -5,7 +5,6 @@ from PIL import Image
 Define global variable
 '''
 
-root : tk.Tk
 size  = [650, 1000]
 PHOTO_MAX_DHISPLAY = 6
 photo_canvases = [tk.Canvas] * PHOTO_MAX_DHISPLAY

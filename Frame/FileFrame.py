@@ -8,9 +8,8 @@ from copy import deepcopy
 from . import config as cfg
 
 class FileFrame(ttk.Frame):
-    def __init__(self, master=None, listbox_frame=None, row=1):
+    def __init__(self, master=None, listbox_frame=None, path=None, row=1):
         super().__init__(master)
-        PATH = '/Users/takeuchiryouya/Code/image_viewer/tmp/canon.png'
         self.master = master
         self.row = row
         self.max_list_height = 6
@@ -20,8 +19,7 @@ class FileFrame(ttk.Frame):
         self.strvar_list_dir : tk.StringVar = None
         self.prev_current_path = [".."]
         self.prev_idx = None
-        cfg.photo_path[self.row-1] = os.path.dirname(__file__)
-        cfg.photo_path[self.row-1] = PATH
+        cfg.photo_path[self.row-1] = path
         self.init()        
 
     def init(self):

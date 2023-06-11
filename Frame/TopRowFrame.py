@@ -33,8 +33,7 @@ class TopRowFrame(ttk.Frame):
         sub_btn = ttk.Button(btn_frame, text='-', command=self.sub_entry, width=WIDTH)
         show_btn = ttk.Button(btn_frame, text='show', command=self.show_btn_tapped, width=WIDTH)
         show_window_btn = ttk.Button(btn_frame, text='show window', command='', width=WIDTH+1)
-        save_btn = ttk.Button(btn_frame, 
-        text='save', command='', width=WIDTH)
+        save_btn = ttk.Button(btn_frame, text='save', command=self.save_btn_tapped, width=WIDTH)
         self.num_var = tk.StringVar(value='表示数:' + str(self.num_entry))
         num_label = tk.Label(btn_frame, textvariable=self.num_var, width=WIDTH)
         size_label = tk.Label(btn_frame, text='サイズ')
@@ -81,3 +80,13 @@ class TopRowFrame(ttk.Frame):
                 self.topapp.update_image_frame(i, cfg.photo_path[i])
             else:
                 lg.info("image file not exists")
+
+    def save_btn_tapped(self):
+        lg.info("¥n----canvas----")
+        lg.info(cfg.photo_canvases)
+        lg.info("¥n----id----")
+        lg.info(cfg.photo_ids)
+        lg.info("¥n----image----")
+        lg.info(cfg.photo_imgs)
+        lg.info("¥n----path----")
+        lg.info(cfg.photo_path)
